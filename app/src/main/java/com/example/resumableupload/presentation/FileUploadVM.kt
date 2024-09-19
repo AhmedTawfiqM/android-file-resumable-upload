@@ -2,7 +2,6 @@ package com.example.resumableupload.presentation
 
 import androidx.lifecycle.ViewModel
 import com.example.resumableupload.data.api.ApiFactory
-import com.example.resumableupload.data.retrofit.RetrofitFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
