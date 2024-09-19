@@ -1,13 +1,14 @@
 package com.example.resumableupload.data
 
 import com.example.resumableupload.data.api.FilePublish
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.Response
 
-class UploadFileRepo(val api: FilePublish) {
+class UploadFileRepo(private val api: FilePublish) {
 
-    suspend fun uploadFile(requestBody: RequestBody): Response {
-        return api.uploadFile(requestBody)
+    suspend fun uploadFile(file: MultipartBody.Part): Response {
+        return api.uploadFile(file)
     }
 
     suspend fun checkUploadStatus(url: String): Response {
@@ -16,8 +17,8 @@ class UploadFileRepo(val api: FilePublish) {
 
     suspend fun resumeUpload(
         url: String,
-        requestBody: RequestBody
+        file: MultipartBody.Part
     ): Response {
-        return api.resumeUpload(url, requestBody)
+        return api.resumeUpload(url, file)
     }
 }
