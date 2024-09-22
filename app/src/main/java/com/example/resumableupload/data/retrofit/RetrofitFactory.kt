@@ -15,8 +15,8 @@ object RetrofitFactory {
         .setLenient()
         .create()
     private val timeOut = 60L
-    //private const val baseUrl = "http://localhost:8080"
-    private const val baseUrl = "http://192.168.8.103:8080"
+   // private const val baseUrl = "http://localhost:1010"
+    private const val baseUrl = "http://192.168.8.103:1010"
 
     fun create(): Retrofit {
         val builder = Retrofit.Builder()

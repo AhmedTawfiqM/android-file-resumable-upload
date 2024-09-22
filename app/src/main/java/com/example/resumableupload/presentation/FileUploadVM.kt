@@ -20,7 +20,7 @@ class FileUploadVM : ViewModel() {
         }) {
             try {
                 val result = uploadFileApi.uploadFile(filePart)
-                result
+                result.isSuccessful
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }

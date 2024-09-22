@@ -8,18 +8,18 @@ import okhttp3.ResponseBody
 
 class UploadFileRepo(private val api: FilePublish) {
 
-    suspend fun uploadFile(file: MultipartBody.Part): ResponseBody {
+    suspend fun uploadFile(file: MultipartBody.Part): retrofit2.Response<ResponseBody> {
         return api.uploadFile(file)
     }
 
-    suspend fun checkUploadStatus(url: String): Response {
+    suspend fun checkUploadStatus(url: String): retrofit2.Response<ResponseBody> {
         return api.checkUploadStatus(url)
     }
 
     suspend fun resumeUpload(
         url: String,
         file: MultipartBody.Part
-    ): Response {
+    ): retrofit2.Response<ResponseBody> {
         return api.resumeUpload(url, file)
     }
 }
