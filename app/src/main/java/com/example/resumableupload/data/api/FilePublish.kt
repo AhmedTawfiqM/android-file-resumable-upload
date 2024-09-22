@@ -23,8 +23,10 @@ interface FilePublish {
     suspend fun checkUploadStatus(@Path("id") id: String): retrofit2.Response<ResponseBody>
 
     @PATCH("uploads/{id}")
+    @Headers("Upload-Offset:{offset}")
     @Multipart
     suspend fun resumeUpload(
+        @Path("offset") offset: String,
         @Path("id") id: String,
         @Part file: MultipartBody.Part
     ): retrofit2.Response<ResponseBody>

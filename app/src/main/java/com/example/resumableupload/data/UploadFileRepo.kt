@@ -17,9 +17,10 @@ class UploadFileRepo(private val api: FilePublish) {
     }
 
     suspend fun resumeUpload(
+        offset: String,
         url: String,
         file: MultipartBody.Part
     ): retrofit2.Response<ResponseBody> {
-        return api.resumeUpload(url, file)
+        return api.resumeUpload(offset,url, file)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.resumableupload.presentation
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -41,12 +42,17 @@ class MainActivity : ComponentActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result == null) return@registerForActivityResult
                 val uri = result.data?.data ?: return@registerForActivityResult
-
-                val multiPart = FileMultiPart.create(this, uri)
-                vm.uploadFile(multiPart.first) {
-                    Toast.makeText(this, "File Upload Successfully !", Toast.LENGTH_LONG).show()
-                }
+                uploadFile(uri)
             }
+    }
+
+    private fun uploadFile(uri: Uri) {
+        val multiPart = FileMultiPart.create(this, uri)
+        vm.uploadFile(multiPart.first) {
+            runOnUiThread {
+                Toast.makeText(this, "File Upload Successfully !", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     @Composable

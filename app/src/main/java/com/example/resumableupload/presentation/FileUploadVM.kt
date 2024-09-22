@@ -23,6 +23,7 @@ class FileUploadVM : ViewModel() {
                 val headers = response.headers()
                 //val presumableUrl = headers[Header.location]
                 response.isSuccessful
+                completion()
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }
