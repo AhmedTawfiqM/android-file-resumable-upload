@@ -4,10 +4,11 @@ import com.example.resumableupload.data.api.FilePublish
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.Response
+import okhttp3.ResponseBody
 
 class UploadFileRepo(private val api: FilePublish) {
 
-    suspend fun uploadFile(file: MultipartBody.Part): Response {
+    suspend fun uploadFile(file: MultipartBody.Part): ResponseBody {
         return api.uploadFile(file)
     }
 

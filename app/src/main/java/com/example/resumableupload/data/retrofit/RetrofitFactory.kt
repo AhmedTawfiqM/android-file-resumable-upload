@@ -1,5 +1,7 @@
 package com.example.resumableupload.data.retrofit
 
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.example.resumableupload.core.CoreApp
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
@@ -13,7 +15,8 @@ object RetrofitFactory {
         .setLenient()
         .create()
     private val timeOut = 60L
-    private val baseUrl = "http://localhost:8080/"
+    //private const val baseUrl = "http://localhost:8080"
+    private const val baseUrl = "http://192.168.8.103:8080"
 
     fun create(): Retrofit {
         val builder = Retrofit.Builder()
@@ -35,7 +38,7 @@ object RetrofitFactory {
             .connectTimeout(timeOut, TimeUnit.MINUTES)
             .readTimeout(timeOut, TimeUnit.MINUTES)
             .writeTimeout(timeOut, TimeUnit.MINUTES)
-            .addInterceptor(interceptor)
+            .addInterceptor(ChuckerInterceptor(CoreApp.context))
             .addInterceptor(interceptor)
             .followSslRedirects(true)
             .followRedirects(true)

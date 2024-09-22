@@ -72,4 +72,7 @@ dependencies {
     api("androidx.compose.material:material:1.5.4")
     api("androidx.compose.material:material-icons-extended:1.5.4")
     api("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+
+    debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
+    releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")
 }
