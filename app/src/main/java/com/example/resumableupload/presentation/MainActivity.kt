@@ -2,6 +2,7 @@ package com.example.resumableupload.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -24,6 +25,7 @@ import com.example.resumableupload.presentation.file.FilePicker
 
 class MainActivity : ComponentActivity() {
     private lateinit var filePickerActivityResult: ActivityResultLauncher<Intent>
+    private lateinit var vm: FileUploadVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             UploadButton()
         }
+        vm = ViewModelProvider(this)[FileUploadVM::class.java]
     }
 
     private fun pickerRegister() {
@@ -39,9 +42,10 @@ class MainActivity : ComponentActivity() {
                 if (result == null) return@registerForActivityResult
                 val uri = result.data?.data ?: return@registerForActivityResult
 
-                val vm = ViewModelProvider(this)[FileUploadVM::class.java]
                 val multiPart = FileMultiPart.create(this, uri)
-                vm.uploadFile(multiPart.first)
+                vm.uploadFile(multiPart.first) {
+                    Toast.makeText(this, "File Upload Successfully !", Toast.LENGTH_LONG).show()
+                }
             }
     }
 

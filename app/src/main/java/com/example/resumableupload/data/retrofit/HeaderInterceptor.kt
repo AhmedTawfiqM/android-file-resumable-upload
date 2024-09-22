@@ -8,7 +8,8 @@ class HeaderInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val builder = request.newBuilder()
-
-        return chain.proceed(builder.build())
+        val response = chain.proceed(request)
+        val headers = response.headers
+        return response
     }
 }

@@ -31,6 +31,7 @@ object RetrofitFactory {
     private fun getHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         HttpLoggingInterceptor.Level.BODY
+        val headerInterceptor = HeaderInterceptor()
 
         return AppOkHttpClient.create()
             .followRedirects(true)
@@ -40,6 +41,7 @@ object RetrofitFactory {
             .writeTimeout(timeOut, TimeUnit.MINUTES)
             .addInterceptor(ChuckerInterceptor(CoreApp.context))
             .addInterceptor(interceptor)
+            .addInterceptor(headerInterceptor)
             .followSslRedirects(true)
             .followRedirects(true)
             .build()
