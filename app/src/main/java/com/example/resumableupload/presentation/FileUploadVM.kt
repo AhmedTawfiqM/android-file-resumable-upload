@@ -51,7 +51,6 @@ class FileUploadVM : ViewModel() {
         }
     }
 
-
     fun mockTest(filePart: MultipartBody.Part) {
         val client = OkHttpClient()
 
@@ -89,14 +88,12 @@ class FileUploadVM : ViewModel() {
 
     }
 
-
     fun uploadByKtor(context: Context, fileUri: Uri) {
         val client = KtorClientFactory.create()
         val fileUploadApi = KtorFileUploadApi(client)
 
         runBlocking {
             try {
-                // Open the InputStream from the URI
                 val inputStream: InputStream? = context.contentResolver.openInputStream(fileUri)
                 if (inputStream != null) {
                     val response = fileUploadApi.uploadFile(inputStream, "example.txt")
@@ -105,7 +102,6 @@ class FileUploadVM : ViewModel() {
                     when (statusCode) {
                         104 -> {
                             println("Upload started, continue uploading...")
-                            // Handle logic to continue uploading chunks
                         }
 
                         200, 201 -> {
@@ -117,13 +113,6 @@ class FileUploadVM : ViewModel() {
                         }
                     }
 
-                    // Example to check status
-                    val checkStatusResponse = fileUploadApi.checkUploadStatus("your_upload_id")
-                    println("Upload status: ${checkStatusResponse.status}")
-
-                    // Example to resume upload
-                    // val resumeResponse = fileUploadApi.resumeUpload("your_offset", "your_upload_id", inputStream, "example.txt")
-                    // println("Resume upload status: ${resumeResponse.status}")
                 } else {
                     println("Failed to open input stream from URI")
                 }

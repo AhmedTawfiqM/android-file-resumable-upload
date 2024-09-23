@@ -82,4 +82,6 @@ dependencies {
     implementation("io.ktor:ktor-client-gson:2.0.0")
     implementation("io.ktor:ktor-client-logging:2.0.0")
     implementation("io.ktor:ktor-client-mock:2.0.0")
+    implementation("io.ktor:ktor-client-cio:2.0.0")
+
 }
