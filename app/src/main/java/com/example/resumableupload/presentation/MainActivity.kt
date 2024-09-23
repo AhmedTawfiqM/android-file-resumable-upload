@@ -67,12 +67,12 @@ class MainActivity : ComponentActivity() {
 //            }
         } else {
             val multiPart = FileMultiPart.create(this, uri)
-            //vm.mockTest(multiPart.first)
-            vm.uploadFile(multiPart.first) {
-                runOnUiThread {
-                    Toast.makeText(this, "File Upload Successfully !", Toast.LENGTH_LONG).show()
-                }
-            }
+            vm.mockTest(multiPart.first)
+//            vm.uploadFile(multiPart.first) {
+//                runOnUiThread {
+//                    Toast.makeText(this, "File Upload Successfully !", Toast.LENGTH_LONG).show()
+//                }
+//            }
         }
     }
 
