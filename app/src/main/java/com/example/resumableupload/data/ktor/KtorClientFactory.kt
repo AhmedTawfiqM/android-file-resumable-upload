@@ -23,13 +23,7 @@ object KtorClientFactory {
                 }
             }
 
-            install("") {
-//                serializer = GsonSerializer {
-//                    setLenient()
-//                }
-            }
-
-            install(MyCustomPlugin)
+            install(KtorCustomPlugin)
             install(Logging) {
                 logger = Logger.DEFAULT
                 level = LogLevel.BODY

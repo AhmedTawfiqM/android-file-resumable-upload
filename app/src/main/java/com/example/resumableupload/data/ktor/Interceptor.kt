@@ -6,27 +6,25 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.util.*
 
-class MyCustomPlugin private constructor() {
+class KtorCustomPlugin private constructor() {
 
     class Config
 
-    companion object : HttpClientPlugin<Config, MyCustomPlugin> {
-        override val key: AttributeKey<MyCustomPlugin> = AttributeKey("MyCustomPlugin")
+    companion object : HttpClientPlugin<Config, KtorCustomPlugin> {
+        override val key: AttributeKey<KtorCustomPlugin> = AttributeKey("KtorCustomPlugin")
 
-        override fun install(plugin: MyCustomPlugin, scope: HttpClient) {
+        override fun install(plugin: KtorCustomPlugin, scope: HttpClient) {
             scope.requestPipeline.intercept(HttpRequestPipeline.Before) {
-                println("Intercepted Request: ${context.url}")
                 proceedWith(subject)
             }
 
             scope.receivePipeline.intercept(HttpReceivePipeline.Before) { response ->
-                println("Intercepted Response: ${response.status}")
                 proceedWith(response)
             }
         }
 
-        override fun prepare(block: Config.() -> Unit): MyCustomPlugin {
-            return MyCustomPlugin()
+        override fun prepare(block: Config.() -> Unit): KtorCustomPlugin {
+            return KtorCustomPlugin()
         }
     }
 }

@@ -21,20 +21,18 @@ import java.io.IOException
 import kotlinx.coroutines.runBlocking
 import android.content.Context
 import android.net.Uri
-import kotlinx.coroutines.runBlocking
 import java.io.InputStream
 
 
 class FileUploadVM : ViewModel() {
     private val backgroundScope = CoroutineScope(Dispatchers.IO)
-    private val uploadFileApi = ApiFactory.createFileUploadApi()
+    private val retrofitFileUploadApi = ApiFactory.createFileUploadApi()
+    private val ktorFileUploadApi = KtorFileUploadApi(KtorClientFactory.create())
 
     fun uploadFile(filePart: MultipartBody.Part, completion: () -> Unit) {
-        backgroundScope.launch(CoroutineExceptionHandler { e, ex ->
-            ex.printStackTrace()
-        }) {
+        backgroundScope.launch {
             try {
-                val response = uploadFileApi.uploadFile(filePart)
+                val response = retrofitFileUploadApi.uploadFile(filePart)
                 val headers = response.headers()
                 val statusCode = response.code()
                 response.isSuccessful
@@ -45,6 +43,38 @@ class FileUploadVM : ViewModel() {
                 } else if (statusCode == 201) {
                     completion()
                 }
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
+    }
+
+    fun uploadByKtor(context: Context, fileUri: Uri) {
+        backgroundScope.launch {
+            try {
+                val inputStream: InputStream? = context.contentResolver.openInputStream(fileUri)
+                if (inputStream != null) {
+                    val response = ktorFileUploadApi.uploadFile(inputStream, "example.txt")
+                    val statusCode = response.status.value
+
+                    when (statusCode) {
+                        104 -> {
+                            println("Upload started, continue uploading...")
+                        }
+
+                        200, 201 -> {
+                            println("Upload completed successfully!")
+                        }
+
+                        else -> {
+                            println("Received unexpected status code: $statusCode")
+                        }
+                    }
+
+                } else {
+                    println("Failed to open input stream from URI")
+                }
+
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }
@@ -88,42 +118,6 @@ class FileUploadVM : ViewModel() {
 
     }
 
-    fun uploadByKtor(context: Context, fileUri: Uri) {
-        val client = KtorClientFactory.create()
-        val fileUploadApi = KtorFileUploadApi(client)
-
-        runBlocking {
-            try {
-                val inputStream: InputStream? = context.contentResolver.openInputStream(fileUri)
-                if (inputStream != null) {
-                    val response = fileUploadApi.uploadFile(inputStream, "example.txt")
-                    val statusCode = response.status.value
-
-                    when (statusCode) {
-                        104 -> {
-                            println("Upload started, continue uploading...")
-                        }
-
-                        200, 201 -> {
-                            println("Upload completed successfully!")
-                        }
-
-                        else -> {
-                            println("Received unexpected status code: $statusCode")
-                        }
-                    }
-
-                } else {
-                    println("Failed to open input stream from URI")
-                }
-
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-            } finally {
-                client.close()
-            }
-        }
-    }
 
     override fun onCleared() {
         backgroundScope.coroutineContext.cancel()
