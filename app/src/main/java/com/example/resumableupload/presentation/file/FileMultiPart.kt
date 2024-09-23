@@ -13,6 +13,20 @@ import java.io.File
 
 object FileMultiPart {
 
+    fun createTempFile(
+        context: Context = CoreApp.context,
+        uri: Uri,
+    ): File {
+        val realFileName = getRealFileNameFromUri(context, uri)
+
+        val tempFile = File(context.cacheDir, realFileName)
+        val inputStream = context.contentResolver.openInputStream(uri)
+        tempFile.outputStream().use { outputStream ->
+            inputStream?.copyTo(outputStream)
+        }
+        return tempFile
+    }
+
     fun create(
         context: Context = CoreApp.context,
         uri: Uri,

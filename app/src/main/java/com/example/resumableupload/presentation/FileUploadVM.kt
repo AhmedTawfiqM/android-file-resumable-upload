@@ -6,7 +6,6 @@ import com.example.resumableupload.data.Header
 import com.example.resumableupload.data.api.ApiFactory
 import com.example.resumableupload.data.ktor.KtorClientFactory
 import com.example.resumableupload.data.ktor.KtorFileUploadApi
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -18,9 +17,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
-import kotlinx.coroutines.runBlocking
 import android.content.Context
 import android.net.Uri
+import com.example.resumableupload.data.UploadHttpUrlTask
+import java.io.File
 import java.io.InputStream
 
 
@@ -78,6 +78,15 @@ class FileUploadVM : ViewModel() {
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }
+        }
+    }
+
+    fun uploadByHttpUrlConnection(
+        file: File,
+        response: (String) -> Unit = {}
+    ) {
+        backgroundScope.launch {
+            UploadHttpUrlTask(file, response).run()
         }
     }
 

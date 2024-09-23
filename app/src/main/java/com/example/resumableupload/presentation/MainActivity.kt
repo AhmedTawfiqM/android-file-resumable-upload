@@ -10,14 +10,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,7 +58,13 @@ class MainActivity : ComponentActivity() {
 
     private fun uploadFile(uri: Uri) {
         if (isKtor) {
-            vm.uploadByKtor(this, uri)
+            //vm.uploadByKtor(this, uri)
+            val file = FileMultiPart.createTempFile(this, uri)
+            vm.uploadByHttpUrlConnection(file) {
+                runOnUiThread {
+                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                }
+            }
         } else {
             val multiPart = FileMultiPart.create(this, uri)
             //vm.mockTest(multiPart.first)
