@@ -9,11 +9,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,12 +31,21 @@ import com.example.resumableupload.presentation.file.FilePicker
 class MainActivity : ComponentActivity() {
     private lateinit var filePickerActivityResult: ActivityResultLauncher<Intent>
     private lateinit var vm: FileUploadVM
+    private var isKtor = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pickerRegister()
         setContent {
-            UploadButton()
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                UploadByRetrofitButton()
+                Spacer(Modifier.height(2.dp))
+                UploadByKtorButton()
+            }
         }
         vm = ViewModelProvider(this)[FileUploadVM::class.java]
     }
@@ -47,28 +60,42 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun uploadFile(uri: Uri) {
-        val multiPart = FileMultiPart.create(this, uri)
-        vm.uploadFile(multiPart.first) {
-            runOnUiThread {
-                Toast.makeText(this, "File Upload Successfully !", Toast.LENGTH_LONG).show()
+        if (isKtor) {
+            vm.uploadByKtor(this, uri)
+        } else {
+            val multiPart = FileMultiPart.create(this, uri)
+            //vm.mockTest(multiPart.first)
+            vm.uploadFile(multiPart.first) {
+                runOnUiThread {
+                    Toast.makeText(this, "File Upload Successfully !", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     @Composable
-    fun UploadButton() {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Button(modifier = Modifier
-                .height(40.dp)
-                .background(color = Color.Black),
-                onClick = {
-                    FilePicker.pick(context = this@MainActivity, filePickerActivityResult)
-                }) {
-                Text(text = "Upload File")
-            }
+    fun UploadByRetrofitButton() {
+        Button(modifier = Modifier
+            .height(40.dp)
+            .background(color = Color.Black),
+            onClick = {
+                isKtor = false
+                FilePicker.pick(context = this@MainActivity, filePickerActivityResult)
+            }) {
+            Text(text = "Upload By Retrofit")
+        }
+    }
+
+    @Composable
+    fun UploadByKtorButton() {
+        Button(modifier = Modifier
+            .height(40.dp)
+            .background(color = Color.Black),
+            onClick = {
+                isKtor = true
+                FilePicker.pick(context = this@MainActivity, filePickerActivityResult)
+            }) {
+            Text(text = "Upload By Ktor")
         }
     }
 

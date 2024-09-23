@@ -14,7 +14,7 @@ object RetrofitFactory {
     private val gson = GsonBuilder()
         .setLenient()
         .create()
-    private val timeOut = 60L
+    private const val timeOut = 60L
    // private const val baseUrl = "http://localhost:1010"
     private const val baseUrl = "http://192.168.8.103:1010"
 
@@ -31,23 +31,18 @@ object RetrofitFactory {
     private fun getHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         HttpLoggingInterceptor.Level.BODY
-        val resumableUploadInterceptor = ResumableUploadInterceptor()
 
         return AppOkHttpClient.create()
-            .followRedirects(true)
-            .followSslRedirects(true)
-            .connectTimeout(timeOut, TimeUnit.MINUTES)
-            .readTimeout(timeOut, TimeUnit.MINUTES)
-            .writeTimeout(timeOut, TimeUnit.MINUTES)
+            .connectTimeout(timeOut, TimeUnit.SECONDS)
+            .readTimeout(timeOut, TimeUnit.SECONDS)
+            .writeTimeout(timeOut, TimeUnit.SECONDS)
             .addInterceptor(ChuckerInterceptor(CoreApp.context))
             .addInterceptor(interceptor)
-            .addInterceptor(resumableUploadInterceptor)
-            .followSslRedirects(true)
-            .followRedirects(true)
+            .addInterceptor(ResumableUploadInterceptor())
+            //.followSslRedirects(true)
+            .followRedirects(false)
             .build()
     }
-
-
 }
 
 
