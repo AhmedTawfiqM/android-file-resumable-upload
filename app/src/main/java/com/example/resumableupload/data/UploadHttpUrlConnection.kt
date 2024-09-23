@@ -1,6 +1,5 @@
 package com.example.resumableupload.data
 
-import android.util.Log
 import com.example.resumableupload.data.retrofit.RetrofitFactory
 import java.io.DataOutputStream
 import java.io.File

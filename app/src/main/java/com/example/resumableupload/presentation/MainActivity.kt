@@ -58,13 +58,13 @@ class MainActivity : ComponentActivity() {
 
     private fun uploadFile(uri: Uri) {
         if (isKtor) {
-            //vm.uploadByKtor(this, uri)
-            val file = FileMultiPart.createTempFile(this, uri)
-            vm.uploadByHttpUrlConnection(file) {
-                runOnUiThread {
-                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                }
-            }
+            vm.uploadByKtor(this, uri)
+//            val file = FileMultiPart.createTempFile(this, uri)
+//            vm.uploadByHttpUrlConnection(file) {
+//                runOnUiThread {
+//                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+//                }
+//            }
         } else {
             val multiPart = FileMultiPart.create(this, uri)
             //vm.mockTest(multiPart.first)

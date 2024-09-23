@@ -10,7 +10,7 @@ import io.ktor.client.plugins.logging.Logging
 import java.util.concurrent.TimeUnit
 
 object KtorClientFactory {
-    private const val baseUrl = "http://192.168.8.103:1010"
+    private const val baseUrl = "http://172.27.224.1:1010"
     private const val timeOut = 60L
 
     fun create(): HttpClient {

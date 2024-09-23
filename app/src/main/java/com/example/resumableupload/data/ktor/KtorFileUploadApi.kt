@@ -1,6 +1,7 @@
 package com.example.resumableupload.data.ktor
 
 import io.ktor.client.*
+import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -13,13 +14,22 @@ class KtorFileUploadApi(private val client: HttpClient) {
 
     suspend fun uploadFile(inputStream: InputStream, fileName: String): HttpResponse {
         return client.submitFormWithBinaryData(
-            url = "/", // Your endpoint here
+            url = "/",
             formData = formData {
                 append("file", InputProvider { inputStream.asInput() }, Headers.build {
                     append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
                 })
             }
-        )
+        ){
+            headers {
+               val test =  this.get("Location")
+                test
+            }
+            onUpload{ sentBytes,total->
+                sentBytes
+                total
+            }
+        }
     }
 
     suspend fun checkUploadStatus(id: String): HttpResponse {
