@@ -104,26 +104,39 @@ class FileUploadVM : ViewModel() {
             .header("Upload-Incomplete", "?0")
             .build()
 
-        val call = client.newCall(request)
-
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                Log.d("RawHttp", "Response Code: ${response.code}")
-
-                if (response.code == 104) {
-                    val locationHeader = response.header("Location")
-                    Log.d("RawHttp", "Upload Resumption Supported at: $locationHeader")
-                } else if (response.isSuccessful) {
-                    Log.d("RawHttp", "Upload successful: ${response.body?.string()}")
+        try {
+            backgroundScope.launch {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful || response.code == 201) {
+                    // Upload successful
+                    response
                 } else {
-                    Log.e("RawHttp", "Upload failed: ${response.body?.string()}")
+                    // Upload failed
+                    response
                 }
             }
-        })
+
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+//        call.enqueue(object : Callback {
+//            override fun onFailure(call: Call, e: IOException) {
+//                e.printStackTrace()
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                Log.d("RawHttp", "Response Code: ${response.code}")
+//
+//                if (response.code == 104) {
+//                    val locationHeader = response.header("Location")
+//                    Log.d("RawHttp", "Upload Resumption Supported at: $locationHeader")
+//                } else if (response.isSuccessful) {
+//                    Log.d("RawHttp", "Upload successful: ${response.body?.string()}")
+//                } else {
+//                    Log.e("RawHttp", "Upload failed: ${response.body?.string()}")
+//                }
+//            }
+//        })
 
     }
 

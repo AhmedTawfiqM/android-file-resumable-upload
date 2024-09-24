@@ -12,9 +12,9 @@ class UploadHttpUrlTask(
     val response: (String) -> Unit = {}
 ) : Runnable {
     override fun run() {
-        var connection: HttpURLConnection? = null
-        var dos: DataOutputStream? = null
-        var fileInputStream: FileInputStream? = null
+        val connection: HttpURLConnection?
+        val dos: DataOutputStream?
+        val fileInputStream: FileInputStream?
 
         try {
             val boundary = "===" + System.currentTimeMillis() + "==="

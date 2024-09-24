@@ -1,6 +1,9 @@
 package com.example.resumableupload.data.retrofit
 
+import okhttp3.Call
+import okhttp3.EventListener
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -9,7 +12,7 @@ import javax.security.cert.CertificateException
 
 object AppOkHttpClient {
 
-     fun create(): OkHttpClient.Builder {
+    fun create(): OkHttpClient.Builder {
         try {
             val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
 
@@ -30,7 +33,9 @@ object AppOkHttpClient {
 
             // Create an ssl socket factory with our all-trusting manager
             val sslSocketFactory = sslContext.socketFactory
-            val builder = OkHttpClient.Builder()
+            val builder = OkHttpClient.Builder().eventListenerFactory {
+                UploadEventListener()
+            }.addNetworkInterceptor(ResumableUploadInterceptor())
             builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
             builder.hostnameVerifier { _, _ -> true }
             return builder
@@ -39,4 +44,24 @@ object AppOkHttpClient {
         }
     }
 
+}
+
+class UploadEventListener : EventListener() {
+    override fun requestHeadersStart(call: Call) {
+        super.requestHeadersStart(call)
+        call
+    }
+
+    override fun responseHeadersEnd(call: Call, response: Response) {
+        super.responseHeadersEnd(call, response)
+        val statusCode = response.code
+        if (statusCode == 104) {
+            val locationHeader = response.header("Location")
+            if (locationHeader != null) {
+
+            }
+        } else if (statusCode == 201) {
+
+        }
+    }
 }
