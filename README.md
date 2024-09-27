@@ -29,6 +29,10 @@ receive 2 responses at the same request since android already as a low level don
 None of above libraries natively supports receiving multiple distinct responses from a single HTTP request because that goes against the
 design of the HTTP protocol itself.
 
+Result: Failed
+
+
+
 Challenge 2 : Receive 104 Response Code:
 the second challenge in android to receive response code under standard response codes 200
 104 is informational response code that is already under 200 response codes
@@ -37,6 +41,10 @@ directly, except HttpUrlConnection, it has received 104 as a final response but 
 we already proved above that android clients have been designed to receive single response from a single request.
 SO ? HttpUrlConnection is the only client that accept and read the first response 104 as final result but the root problem here that it
 also close the connection directly! but HttpUrlConnection is low-level layer that needs more boilerplate code to be customized!
+
+Result: Success with HttpUrlConnection
+
+
 
 
 Brainstorming:
